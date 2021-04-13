@@ -14,6 +14,7 @@ function M.setup()
 		back = '#002b36',
 		orange = '#cb4b16',
 		base01 = '#586e75',
+		-- base01 = '#494c4d',
 		base00 = '#657b83',
 		base0 = '#839496',
 		violet = '#6c71c4',

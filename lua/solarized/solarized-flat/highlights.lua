@@ -8,18 +8,16 @@ if fn.exists("syntax_on") then
     cmd("syntax reset")
 end
 
+local c  -- colors
 if o.bg == "dark" then
-    colors = require("solarized.solarized-flat.solarized-dark").setup()
+    c = require("solarized.solarized-flat.solarized-dark").setup()
 else
-    colors = require("solarized.solarized-flat.solarized-light").setup()
+    c = require("solarized.solarized-flat.solarized-light").setup()
 end
 
 local settings = {
-    solarized_visibility = "normal",
-    solarized_diffmode = "normal",
-    solarized_termtrans = 0,
-    solarized_statusline = "normal",
-    solarized_italics = 1
+    solarized_termtrans = false,
+    solarized_italics = true
 }
 
 for key, val in pairs(settings) do
@@ -30,11 +28,11 @@ end
 
 local setup = function(group, colors)
     if colors.guisp == nil then
-        cmd(string.format("hi %s guifg=%s guibg=%s gui=%s", group, colors.guifg, colors.guibg, colors.gui))
+        cmd(string.format("highlight! %s guifg=%s guibg=%s gui=%s", group, colors.guifg, colors.guibg, colors.gui))
     else
         cmd(
             string.format(
-                "hi %s guifg=%s guibg=%s guisp=%s gui=%s",
+                "highlight %s guifg=%s guibg=%s guisp=%s gui=%s",
                 group,
                 colors.guifg,
                 colors.guibg,
@@ -47,7 +45,7 @@ end
 
 function M.load_syntax()
     local italics = function()
-        if g.solarized_italics == 1 then
+        if g.solarized_italics then
             return "italic"
         else
             return "none"
@@ -55,7 +53,7 @@ function M.load_syntax()
     end
 
     local termtrans = function(color)
-        if g.solarized_termtrans == 1 then
+        if g.solarized_termtrans then
             return "none"
         else
             return color
@@ -63,267 +61,223 @@ function M.load_syntax()
     end
 
     local syntax = {}
-    syntax["Normal"] = {guifg = colors.base0, guibg = termtrans(colors.base03), gui = "none"}
-    syntax["CursorLine"] = {guifg = "none", guibg = termtrans(colors.base02), gui = "none"}
-    syntax["Terminal"] = {guifg = "fg", guibg = termtrans(colors.base03), gui = "none"}
-    syntax["ToolbarButton"] = {guifg = colors.base1, guibg = termtrans(colors.base02), gui = "bold"}
-    syntax["ToolbarLine"] = {guifg = "none", guibg = termtrans(colors.base02), gui = "none"}
+    syntax["Normal"] = {guifg = c.base0, guibg = termtrans(c.base03), gui = "none"}
+    syntax["CursorLine"] = {guifg = "none", guibg = termtrans(c.base02), gui = "none"}
+    syntax["Terminal"] = {guifg = "fg", guibg = termtrans(c.base03), gui = "none"}
+    syntax["ToolbarButton"] = {guifg = c.base1, guibg = termtrans(c.base02), gui = "bold"}
+    syntax["ToolbarLine"] = {guifg = "none", guibg = termtrans(c.base02), gui = "none"}
 
-    if g.solarized_visibility == "high" then
-        syntax["CursorLineNr"] = {guifg = colors.orange, guibg = bg, gui = "bold"}
-        syntax["NonText"] = {guifg = colors.orange, guibg = bg, gui = "bold"}
-        syntax["SpecialKey"] = {guifg = fg, guibg = bg, gui = "reverse"}
-        syntax["SpellBad"] = {guifg = fg, guibg = bg, guisp = colors.red, gui = "reverse,undercurl"}
-        syntax["SpellCap"] = {guifg = fg, guibg = bg, guisp = colors.red, gui = "reverse,undercurl"}
-        syntax["SpellLocal"] = {guifg = fg, guibg = bg, guisp = colors.red, gui = "reverse,undercurl"}
-        syntax["SpellRare"] = {guifg = fg, guibg = bg, guisp = colors.red, gui = "reverse,undercurl"}
-        syntax["Title"] = {guifg = colors.yellow, guibg = bg, gui = "bold"}
-    elseif g.solarized_visibility == "low" then
-        syntax["CursorLineNr"] = {guifg = colors.base01, guibg = "none", gui = "bold"}
-        syntax["NonText"] = {guifg = colors.base02, guibg = "none", gui = "bold"}
-        syntax["SpecialKey"] = {guifg = colors.base02, guibg = "none", gui = "reverse"}
-        syntax["SpellBad"] = {guifg = colors.violet, guibg = "none", guisp = colors.violet, gui = "undercurl"}
-        syntax["SpellCap"] = {guifg = colors.violet, guibg = "none", guisp = colors.violet, gui = "undercurl"}
-        syntax["SpellLocal"] = {guifg = colors.yellow, guibg = "none", guisp = colors.yellow, gui = "undercurl"}
-        syntax["SpellRare"] = {guifg = colors.cyan, guibg = "none", guisp = colors.cyan, gui = "undercurl"}
-        syntax["Title"] = {guifg = colors.base01, guibg = "none", gui = "bold"}
-    else
-        syntax["CursorLineNr"] = {guifg = colors.base0, guibg = "none", gui = "bold"}
-        syntax["NonText"] = {guifg = colors.base00, guibg = "none", gui = "bold"}
-        syntax["SpecialKey"] = {guifg = colors.base00, guibg = colors.base02, gui = "bold"}
-        syntax["SpellBad"] = {guifg = colors.violet, guibg = "none", guisp = colors.violet, gui = "undercurl"}
-        syntax["SpellCap"] = {guifg = colors.violet, guibg = "none", guisp = colors.violet, gui = "undercurl"}
-        syntax["SpellLocal"] = {guifg = colors.yellow, guibg = "none", guisp = colors.yellow, gui = "undercurl"}
-        syntax["SpellRare"] = {guifg = colors.cyan, guibg = "none", guisp = colors.cyan, gui = "undercurl"}
-        syntax["Title"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    end
+    syntax["CursorLineNr"] = {guifg = c.orange, guibg = "bg", gui = "bold"}
+    syntax["NonText"] = {guifg = c.orange, guibg = "bg", gui = "bold"}
+    syntax["SpecialKey"] = {guifg = "none", guibg = "none", gui = "reverse"}
+    syntax["SpellBad"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
+    syntax["SpellCap"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
+    syntax["SpellLocal"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
+    syntax["SpellRare"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
+    syntax["Title"] = {guifg = c.yellow, guibg = "bg", gui = "bold"}
 
-    if g.solarized_diffmode == "high" then
-        syntax["DiffAdd"] = {guifg = colors.green, guibg = "none", gui = "reverse"}
-        syntax["DiffChange"] = {guifg = colors.yellow, guibg = "none", gui = "reverse"}
-        syntax["DiffDelete"] = {guifg = colors.red, guibg = "none", gui = "reverse"}
-        syntax["DiffText"] = {guifg = colors.blue, guibg = "none", gui = "reverse"}
-    elseif g.solarized_diffmode == "low" then
-        syntax["DiffAdd"] = {guifg = colors.green, guibg = "none", guisp = colors.green, gui = "none"}
-        syntax["DiffChange"] = {guifg = colors.yellow, guibg = "none", guisp = colors.yellow, gui = "none"}
-        syntax["DiffDelete"] = {guifg = colors.red, guibg = "none", gui = "bold"}
-        syntax["DiffText"] = {guifg = colors.blue, guibg = "none", guisp = colors.blue, gui = "none"}
-    else
-        syntax["DiffAdd"] = {guifg = colors.green, guibg = colors.base02, guisp = colors.green, gui = "none"}
-        syntax["DiffChange"] = {guifg = colors.yellow, guibg = colors.base02, guisp = colors.yellow, gui = "none"}
-        syntax["DiffDelete"] = {guifg = colors.red, guibg = colors.base02, gui = "bold"}
-        syntax["DiffText"] = {guifg = colors.blue, guibg = colors.base02, guisp = colors.blue, gui = "none"}
-    end
+    syntax["DiffAdd"] = {guifg = c.green, guibg = "none", gui = "reverse"}
+    syntax["DiffChange"] = {guifg = c.yellow, guibg = "none", gui = "reverse"}
+    syntax["DiffDelete"] = {guifg = c.red, guibg = "none", gui = "reverse"}
+    syntax["DiffText"] = {guifg = c.blue, guibg = "none", gui = "reverse"}
 
-    if g.solarized_statusline == "low" then
-        syntax["StatusLine"] = {guifg = colors.base02, guibg = colors.base1, gui = "bold,reverse"}
-        syntax["StatusLineNC"] = {guifg = colors.base02, guibg = colors.base01, gui = "reverse"}
-        syntax["TabLineSel"] = {guifg = colors.base1, guibg = colors.base02, gui = "none"}
-        syntax["NormalMode"] = {guifg = colors.base02, guibg = colors.base1, gui = "bold,reverse"}
-    elseif g.solarized_statusline == "flat" then
-        syntax["StatusLine"] = {guifg = colors.base02, guibg = colors.base2, gui = "reverse"}
-        syntax["StatusLineNC"] = {guifg = colors.base02, guibg = colors.base1, gui = "reverse"}
-        syntax["TabLineSel"] = {guifg = colors.base2, guibg = colors.base02, gui = "none"}
-        syntax["NormalMode"] = {guifg = colors.base02, guibg = colors.base2, gui = "reverse"}
-    else
-        syntax["StatusLine"] = {guifg = colors.base02, guibg = colors.base2, gui = "reverse"}
-        syntax["StatusLineNC"] = {guifg = colors.base02, guibg = colors.base1, gui = "reverse"}
-        syntax["TabLineSel"] = {guifg = colors.base2, guibg = colors.base02, gui = "none"}
-        syntax["NormalMode"] = {guifg = colors.base02, guibg = colors.base2, gui = "reverse"}
-    end
+    syntax["StatusLine"] = {guifg = c.base02, guibg = c.base2, gui = "reverse"}
+    syntax["StatusLineNC"] = {guifg = c.base02, guibg = c.base1, gui = "reverse"}
+    syntax["TabLineSel"] = {guifg = c.base2, guibg = c.base02, gui = "none"}
+    syntax["NormalMode"] = {guifg = c.base02, guibg = c.base2, gui = "reverse"}
 
-    syntax["ColorColumn"] = {guifg = "none", guibg = colors.base02, gui = "none"}
-    syntax["Conceal"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["CursorColumn"] = {guifg = "none", guibg = colors.base02, gui = "none"}
-    syntax["Directory"] = {guifg = colors.blue, guibg = "none", gui = "none"}
+    syntax["ColorColumn"] = {guifg = "none", guibg = c.base02, gui = "none"}
+    syntax["Conceal"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["CursorColumn"] = {guifg = "none", guibg = c.base02, gui = "none"}
+    syntax["Directory"] = {guifg = c.blue, guibg = "none", gui = "none"}
     syntax["EndOfBuffer"] = {guifg = "none", guibg = "none", gui = "none"}
-    syntax["ErrorMsg"] = {guifg = colors.red, guibg = colors.base3, gui = "reverse"}
-    syntax["FoldColumn"] = {guifg = colors.base0, guibg = "none", gui = "none"}
-    syntax["Folded"] = {guifg = colors.base0, guibg = "none", guisp = colors.base03, gui = "bold"}
-    syntax["IncSearch"] = {guifg = colors.orange, guibg = "none", gui = "standout"}
-    syntax["LineNr"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["MatchParen"] = {guifg = colors.base3, guibg = colors.base02, gui = "bold"}
-    syntax["ModeMsg"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["MoreMsg"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["Pmenu"] = {guifg = colors.base0, guibg = colors.base02, gui = "none"}
-    syntax["PmenuSbar"] = {guifg = "none", guibg = colors.base02, gui = "none"}
-    syntax["PmenuSel"] = {guifg = colors.base2, guibg = colors.base01, gui = "none"}
-    syntax["PmenuThumb"] = {guifg = "none", guibg = colors.base01, gui = "none"}
-    syntax["Question"] = {guifg = colors.cyan, guibg = "none", gui = "bold"}
-    syntax["Search"] = {guifg = colors.yellow, guibg = "none", gui = "reverse"}
-    syntax["SignColumn"] = {guifg = colors.base0, guibg = "none", gui = "none"}
-    syntax["TabLine"] = {guifg = colors.base01, guibg = colors.base02, gui = "none"}
-    syntax["TabLineFill"] = {guifg = colors.base01, guibg = colors.base02, gui = "none"}
-    syntax["VertSplit"] = {guifg = colors.base01, guibg = colors.base02, gui = "none"}
-    syntax["Visual"] = {guifg = colors.base01, guibg = colors.base03, gui = "reverse"}
-    syntax["VisualNOS"] = {guifg = "none", guibg = colors.base02, gui = "reverse"}
-    syntax["WarningMsg"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["WildMenu"] = {guifg = colors.base00, guibg = colors.base2, gui = "reverse"}
-    syntax["Comment"] = {guifg = colors.base01, guibg = "none", gui = italics()}
-    syntax["Constant"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["CursorIM"] = {guifg = "none", guibg = fg, gui = "none"}
-    syntax["Error"] = {guifg = fg, guibg = bg, gui = "italic,undercurl"}
-    syntax["Identifier"] = {guifg = colors.blue, guibg = "none", gui = "none"}
+    syntax["ErrorMsg"] = {guifg = c.red, guibg = c.base3, gui = "reverse"}
+    syntax["FoldColumn"] = {guifg = c.base0, guibg = "none", gui = "none"}
+    syntax["Folded"] = {guifg = c.base0, guibg = "none", guisp = c.base03, gui = "bold"}
+    syntax["IncSearch"] = {guifg = c.orange, guibg = "none", gui = "standout"}
+    syntax["LineNr"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["MatchParen"] = {guifg = c.base3, guibg = c.base02, gui = "bold"}
+    syntax["ModeMsg"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["MoreMsg"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["Pmenu"] = {guifg = c.base0, guibg = c.base02, gui = "none"}
+    syntax["PmenuSbar"] = {guifg = "none", guibg = c.base02, gui = "none"}
+    syntax["PmenuSel"] = {guifg = c.base2, guibg = c.base01, gui = "none"}
+    syntax["PmenuThumb"] = {guifg = "none", guibg = c.base01, gui = "none"}
+    syntax["Question"] = {guifg = c.cyan, guibg = "none", gui = "bold"}
+    syntax["Search"] = {guifg = c.yellow, guibg = "none", gui = "reverse"}
+    syntax["SignColumn"] = {guifg = c.base0, guibg = "none", gui = "none"}
+    syntax["TabLine"] = {guifg = c.base01, guibg = c.base02, gui = "none"}
+    syntax["TabLineFill"] = {guifg = c.base01, guibg = c.base02, gui = "none"}
+    syntax["VertSplit"] = {guifg = c.base01, guibg = c.base02, gui = "none"}
+    syntax["Visual"] = {guifg = "none", guibg = "#494c4d", gui = "none"}
+    syntax["VisualNOS"] = {guifg = "none", guibg = c.base02, gui = "reverse"}
+    syntax["WarningMsg"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["WildMenu"] = {guifg = c.base00, guibg = c.base2, gui = "reverse"}
+    syntax["Comment"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["Constant"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["CursorIM"] = {guifg = "none", guibg = "fg", gui = "none"}
+    syntax["Error"] = {guifg = "fg", guibg = "bg", guisp = c.red, gui = "undercurl"}
+    syntax["Identifier"] = {guifg = "none", guibg = "none", gui = "none"}
     syntax["Ignore"] = {guifg = "none", guibg = "none", gui = "none"}
-    syntax["PreProc"] = {guifg = colors.orange, guibg = bg, gui = "italic"}
-    syntax["Special"] = {guifg = colors.orange, guibg = "none", gui = "none"}
-    syntax["Statement"] = {guifg = colors.green, guibg = "none", gui = "none"}
-    syntax["Todo"] = {guifg = colors.magenta, guibg = "none", gui = "bold"}
-    syntax["Type"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["Underlined"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["InsertMode"] = {guifg = colors.base02, guibg = colors.cyan, gui = "bold,reverse"}
-    syntax["ReplaceMode"] = {guifg = colors.base02, guibg = colors.orange, gui = "bold,reverse"}
-    syntax["VisualMode"] = {guifg = colors.base02, guibg = colors.magenta, gui = "bold,reverse"}
-    syntax["CommandMode"] = {guifg = colors.base02, guibg = colors.magenta, gui = "bold,reverse"}
-    syntax["vimCommentString"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["vimCommand"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["vimCmdSep"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["helpExample"] = {guifg = colors.base1, guibg = "none", gui = "none"}
-    syntax["helpOption"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["helpNote"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["helpVim"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["helpHyperTextJump"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["helpHyperTextEntry"] = {guifg = colors.green, guibg = "none", gui = "none"}
-    syntax["vimIsCommand"] = {guifg = colors.base00, guibg = "none", gui = "none"}
-    syntax["vimSynMtchOpt"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["vimSynType"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["vimHiLink"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["vimHiGroup"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["vimGroup"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["gitcommitComment"] = {guifg = colors.base01, guibg = "none", gui = italics()}
-    syntax["gitcommitUnmerged"] = {guifg = colors.green, guibg = "none", gui = "bold"}
-    syntax["gitcommitOnBranch"] = {guifg = colors.base01, guibg = "none", gui = "bold"}
-    syntax["gitcommitBranch"] = {guifg = colors.magenta, guibg = "none", gui = "bold"}
-    syntax["gitcommitUnmerged"] = {guifg = colors.green, guibg = "none", gui = "bold"}
-    syntax["gitcommitOnBranch"] = {guifg = colors.base01, guibg = "none", gui = "bold"}
-    syntax["gitcommitBranch"] = {guifg = colors.magenta, guibg = "none", gui = "bold"}
-    syntax["gitcommitdiscardedtype"] = {guifg = colors.red, guibg = "none", gui = "none"}
-    syntax["gitcommitselectedtype"] = {guifg = colors.green, guibg = "none", gui = "none"}
-    syntax["gitcommitHeader"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["gitcommitUntrackedFile"] = {guifg = colors.cyan, guibg = "none", gui = "bold"}
-    syntax["gitcommitDiscardedFile"] = {guifg = colors.red, guibg = "none", gui = "bold"}
-    syntax["gitcommitSelectedFile"] = {guifg = colors.green, guibg = "none", gui = "bold"}
-    syntax["gitcommitUnmergedFile"] = {guifg = colors.yellow, guibg = "none", gui = "bold"}
-    syntax["gitcommitFile"] = {guifg = colors.base0, guibg = "none", gui = "bold"}
-    syntax["htmlTag"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["htmlEndTag"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["htmlTagN"] = {guifg = colors.base1, guibg = "none", gui = "bold"}
-    syntax["htmlTagName"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["htmlSpecialTagName"] = {guifg = colors.blue, guibg = "none", gui = italics()}
-    syntax["htmlArg"] = {guifg = colors.base00, guibg = "none", gui = "none"}
-    syntax["javaScript"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["perlHereDoc"] = {guifg = colors.base1, guibg = colors.base03, gui = "none"}
-    syntax["perlVarPlain"] = {guifg = colors.yellow, guibg = colors.base03, gui = "none"}
-    syntax["perlStatementFileDesc"] = {guifg = colors.cyan, guibg = colors.base03, gui = "none"}
-    syntax["texstatement"] = {guifg = colors.cyan, guibg = colors.base03, gui = "none"}
-    syntax["texmathzonex"] = {guifg = colors.yellow, guibg = colors.base03, gui = "none"}
-    syntax["texmathmatcher"] = {guifg = colors.yellow, guibg = colors.base03, gui = "none"}
-    syntax["texreflabel"] = {guifg = colors.yellow, guibg = colors.base03, gui = "none"}
-    syntax["rubyDefine"] = {guifg = colors.base1, guibg = colors.base03, gui = "bold"}
-    syntax["rubyBoolean"] = {guifg = colors.magenta, guibg = colors.base03, gui = "none"}
-    syntax["cPreCondit"] = {guifg = colors.orange, guibg = "none", gui = "none"}
-    syntax["VarId"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["ConId"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["hsImport"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["hsString"] = {guifg = colors.base00, guibg = "none", gui = "none"}
-    syntax["hsStructure"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["hs_hlFunctionName"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["hsStatement"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["hsImportLabel"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["hs_OpFunctionName"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["hs_DeclareFunction"] = {guifg = colors.orange, guibg = "none", gui = "none"}
-    syntax["hsVarSym"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["hsType"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["hsTypedef"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["hsModuleName"] = {guifg = colors.green, guibg = "none", gui = "none"}
-    syntax["hsNiceOperator"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["hsniceoperator"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["pandocTitleBlock"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocTitleBlockTitle"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocTitleComment"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocComment"] = {guifg = colors.base01, guibg = "none", gui = italics()}
-    syntax["pandocVerbatimBlock"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["pandocBlockQuote"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocBlockQuoteLeader1"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocBlockQuoteLeader2"] = {guifg = colors.cyan, guibg = "none", gui = "none"}
-    syntax["pandocBlockQuoteLeader3"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["pandocBlockQuoteLeader4"] = {guifg = colors.red, guibg = "none", gui = "none"}
-    syntax["pandocBlockQuoteLeader5"] = {guifg = colors.base0, guibg = "none", gui = "none"}
-    syntax["pandocBlockQuoteLeader6"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["pandocListMarker"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["pandocListReference"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["pandocDefinitionBlock"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["pandocDefinitionTerm"] = {guifg = colors.violet, guibg = "none", gui = "standout"}
-    syntax["pandocDefinitionIndctr"] = {guifg = colors.violet, guibg = "none", gui = "bold"}
-    syntax["pandocEmphasisDefinition"] = {guifg = colors.violet, guibg = "none", gui = italics()}
-    syntax["pandocEmphasisNestedDefinition"] = {guifg = colors.violet, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisDefinition"] = {guifg = colors.violet, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisNestedDefinition"] = {guifg = colors.violet, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisEmphasisDefinition"] = {guifg = colors.violet, guibg = "none", gui = "bold"}
-    syntax["pandocStrikeoutDefinition"] = {guifg = colors.violet, guibg = "none", gui = "reverse"}
-    syntax["pandocVerbatimInlineDefinition"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["pandocSuperscriptDefinition"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["pandocSubscriptDefinition"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["pandocTable"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocTableStructure"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocTableZebraLight"] = {guifg = colors.blue, guibg = colors.base03, gui = "none"}
-    syntax["pandocTableZebraDark"] = {guifg = colors.blue, guibg = colors.base02, gui = "none"}
-    syntax["pandocEmphasisTable"] = {guifg = colors.blue, guibg = "none", gui = italics()}
-    syntax["pandocEmphasisNestedTable"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisTable"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisNestedTable"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisEmphasisTable"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocStrikeoutTable"] = {guifg = colors.blue, guibg = "none", gui = "reverse"}
-    syntax["pandocVerbatimInlineTable"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocSuperscriptTable"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocSubscriptTable"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocHeadingMarker"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocEmphasisHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocEmphasisNestedHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisNestedHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisEmphasisHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocStrikeoutHeading"] = {guifg = colors.orange, guibg = "none", gui = "reverse"}
-    syntax["pandocVerbatimInlineHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocSuperscriptHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocSubscriptHeading"] = {guifg = colors.orange, guibg = "none", gui = "bold"}
-    syntax["pandocLinkDelim"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["pandocLinkLabel"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocLinkText"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocLinkURL"] = {guifg = colors.base00, guibg = "none", gui = "none"}
-    syntax["pandocLinkTitle"] = {guifg = colors.base00, guibg = "none", gui = "none"}
-    syntax["pandocLinkTitleDelim"] = {guifg = colors.base01, guibg = "none", guisp = colors.base00, gui = "none"}
-    syntax["pandocLinkDefinition"] = {guifg = colors.cyan, guibg = "none", guisp = colors.base00, gui = "none"}
-    syntax["pandocLinkDefinitionID"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocImageCaption"] = {guifg = colors.violet, guibg = "none", gui = "bold"}
-    syntax["pandocFootnoteLink"] = {guifg = colors.green, guibg = "none", gui = "none"}
-    syntax["pandocFootnoteDefLink"] = {guifg = colors.green, guibg = "none", gui = "bold"}
-    syntax["pandocFootnoteInline"] = {guifg = colors.green, guibg = "none", gui = "bold"}
-    syntax["pandocFootnote"] = {guifg = colors.green, guibg = "none", gui = "none"}
-    syntax["pandocCitationDelim"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["pandocCitation"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["pandocCitationID"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["pandocCitationRef"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["pandocStyleDelim"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["pandocEmphasis"] = {guifg = colors.base0, guibg = "none", gui = italics()}
-    syntax["pandocEmphasisNested"] = {guifg = colors.base0, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasis"] = {guifg = colors.base0, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisNested"] = {guifg = colors.base0, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisEmphasis"] = {guifg = colors.base0, guibg = "none", gui = "bold"}
-    syntax["pandocStrikeout"] = {guifg = colors.base01, guibg = "none", gui = "reverse"}
-    syntax["pandocVerbatimInline"] = {guifg = colors.yellow, guibg = "none", gui = "none"}
-    syntax["pandocSuperscript"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["pandocSubscript"] = {guifg = colors.violet, guibg = "none", gui = "none"}
-    syntax["pandocRule"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocRuleLine"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
-    syntax["pandocEscapePair"] = {guifg = colors.red, guibg = "none", gui = "bold"}
-    syntax["pandocCitationRef"] = {guifg = colors.magenta, guibg = "none", gui = "none"}
-    syntax["pandocNonBreakingSpace"] = {guifg = colors.red, guibg = "none", gui = "reverse"}
-    syntax["pandocMetadataDelim"] = {guifg = colors.base01, guibg = "none", gui = "none"}
-    syntax["pandocMetadata"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocMetadataKey"] = {guifg = colors.blue, guibg = "none", gui = "none"}
-    syntax["pandocMetadata"] = {guifg = colors.blue, guibg = "none", gui = "bold"}
+    syntax["PreProc"] = {guifg = c.orange, guibg = "bg", gui = "italic"}
+    syntax["Special"] = {guifg = c.orange, guibg = "none", gui = "none"}
+    syntax["Statement"] = {guifg = c.green, guibg = "none", gui = "none"}
+    syntax["Todo"] = {guifg = c.magenta, guibg = "none", gui = "bold"}
+    syntax["Type"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["Underlined"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["InsertMode"] = {guifg = c.base02, guibg = c.cyan, gui = "bold,reverse"}
+    syntax["ReplaceMode"] = {guifg = c.base02, guibg = c.orange, gui = "bold,reverse"}
+    syntax["VisualMode"] = {guifg = c.base02, guibg = c.magenta, gui = "bold,reverse"}
+    syntax["CommandMode"] = {guifg = c.base02, guibg = c.magenta, gui = "bold,reverse"}
+    syntax["vimCommentString"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["vimCommand"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["vimCmdSep"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["helpExample"] = {guifg = c.base1, guibg = "none", gui = "none"}
+    syntax["helpOption"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["helpNote"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["helpVim"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["helpHyperTextJump"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["helpHyperTextEntry"] = {guifg = c.green, guibg = "none", gui = "none"}
+    syntax["vimIsCommand"] = {guifg = c.base00, guibg = "none", gui = "none"}
+    syntax["vimSynMtchOpt"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["vimSynType"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["vimHiLink"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["vimHiGroup"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["vimGroup"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["gitcommitComment"] = {guifg = c.base01, guibg = "none", gui = italics()}
+    syntax["gitcommitUnmerged"] = {guifg = c.green, guibg = "none", gui = "bold"}
+    syntax["gitcommitOnBranch"] = {guifg = c.base01, guibg = "none", gui = "bold"}
+    syntax["gitcommitBranch"] = {guifg = c.magenta, guibg = "none", gui = "bold"}
+    syntax["gitcommitUnmerged"] = {guifg = c.green, guibg = "none", gui = "bold"}
+    syntax["gitcommitOnBranch"] = {guifg = c.base01, guibg = "none", gui = "bold"}
+    syntax["gitcommitBranch"] = {guifg = c.magenta, guibg = "none", gui = "bold"}
+    syntax["gitcommitdiscardedtype"] = {guifg = c.red, guibg = "none", gui = "none"}
+    syntax["gitcommitselectedtype"] = {guifg = c.green, guibg = "none", gui = "none"}
+    syntax["gitcommitHeader"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["gitcommitUntrackedFile"] = {guifg = c.cyan, guibg = "none", gui = "bold"}
+    syntax["gitcommitDiscardedFile"] = {guifg = c.red, guibg = "none", gui = "bold"}
+    syntax["gitcommitSelectedFile"] = {guifg = c.green, guibg = "none", gui = "bold"}
+    syntax["gitcommitUnmergedFile"] = {guifg = c.yellow, guibg = "none", gui = "bold"}
+    syntax["gitcommitFile"] = {guifg = c.base0, guibg = "none", gui = "bold"}
+    syntax["htmlTag"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["htmlEndTag"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["htmlTagN"] = {guifg = c.base1, guibg = "none", gui = "bold"}
+    syntax["htmlTagName"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["htmlSpecialTagName"] = {guifg = c.blue, guibg = "none", gui = italics()}
+    syntax["htmlArg"] = {guifg = c.base00, guibg = "none", gui = "none"}
+    syntax["javaScript"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["perlHereDoc"] = {guifg = c.base1, guibg = c.base03, gui = "none"}
+    syntax["perlVarPlain"] = {guifg = c.yellow, guibg = c.base03, gui = "none"}
+    syntax["perlStatementFileDesc"] = {guifg = c.cyan, guibg = c.base03, gui = "none"}
+    syntax["texstatement"] = {guifg = c.cyan, guibg = c.base03, gui = "none"}
+    syntax["texmathzonex"] = {guifg = c.yellow, guibg = c.base03, gui = "none"}
+    syntax["texmathmatcher"] = {guifg = c.yellow, guibg = c.base03, gui = "none"}
+    syntax["texreflabel"] = {guifg = c.yellow, guibg = c.base03, gui = "none"}
+    syntax["rubyDefine"] = {guifg = c.base1, guibg = c.base03, gui = "bold"}
+    syntax["rubyBoolean"] = {guifg = c.magenta, guibg = c.base03, gui = "none"}
+    syntax["cPreCondit"] = {guifg = c.orange, guibg = "none", gui = "none"}
+    syntax["VarId"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["ConId"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["hsImport"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["hsString"] = {guifg = c.base00, guibg = "none", gui = "none"}
+    syntax["hsStructure"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["hs_hlFunctionName"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["hsStatement"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["hsImportLabel"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["hs_OpFunctionName"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["hs_DeclareFunction"] = {guifg = c.orange, guibg = "none", gui = "none"}
+    syntax["hsVarSym"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["hsType"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["hsTypedef"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["hsModuleName"] = {guifg = c.green, guibg = "none", gui = "none"}
+    syntax["hsNiceOperator"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["hsniceoperator"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["pandocTitleBlock"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocTitleBlockTitle"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocTitleComment"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocComment"] = {guifg = c.base01, guibg = "none", gui = italics()}
+    syntax["pandocVerbatimBlock"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["pandocBlockQuote"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocBlockQuoteLeader1"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocBlockQuoteLeader2"] = {guifg = c.cyan, guibg = "none", gui = "none"}
+    syntax["pandocBlockQuoteLeader3"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["pandocBlockQuoteLeader4"] = {guifg = c.red, guibg = "none", gui = "none"}
+    syntax["pandocBlockQuoteLeader5"] = {guifg = c.base0, guibg = "none", gui = "none"}
+    syntax["pandocBlockQuoteLeader6"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["pandocListMarker"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["pandocListReference"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["pandocDefinitionBlock"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["pandocDefinitionTerm"] = {guifg = c.violet, guibg = "none", gui = "standout"}
+    syntax["pandocDefinitionIndctr"] = {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocEmphasisDefinition"] = {guifg = c.violet, guibg = "none", gui = italics()}
+    syntax["pandocEmphasisNestedDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisNestedDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisEmphasisDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocStrikeoutDefinition"] = {guifg = c.violet, guibg = "none", gui = "reverse"}
+    syntax["pandocVerbatimInlineDefinition"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["pandocSuperscriptDefinition"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["pandocSubscriptDefinition"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["pandocTable"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocTableStructure"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocTableZebraLight"] = {guifg = c.blue, guibg = c.base03, gui = "none"}
+    syntax["pandocTableZebraDark"] = {guifg = c.blue, guibg = c.base02, gui = "none"}
+    syntax["pandocEmphasisTable"] = {guifg = c.blue, guibg = "none", gui = italics()}
+    syntax["pandocEmphasisNestedTable"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisTable"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisNestedTable"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisEmphasisTable"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocStrikeoutTable"] = {guifg = c.blue, guibg = "none", gui = "reverse"}
+    syntax["pandocVerbatimInlineTable"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocSuperscriptTable"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocSubscriptTable"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocHeadingMarker"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocEmphasisHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocEmphasisNestedHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisNestedHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisEmphasisHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocStrikeoutHeading"] = {guifg = c.orange, guibg = "none", gui = "reverse"}
+    syntax["pandocVerbatimInlineHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocSuperscriptHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocSubscriptHeading"] = {guifg = c.orange, guibg = "none", gui = "bold"}
+    syntax["pandocLinkDelim"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["pandocLinkLabel"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocLinkText"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocLinkURL"] = {guifg = c.base00, guibg = "none", gui = "none"}
+    syntax["pandocLinkTitle"] = {guifg = c.base00, guibg = "none", gui = "none"}
+    syntax["pandocLinkTitleDelim"] = {guifg = c.base01, guibg = "none", guisp = c.base00, gui = "none"}
+    syntax["pandocLinkDefinition"] = {guifg = c.cyan, guibg = "none", guisp = c.base00, gui = "none"}
+    syntax["pandocLinkDefinitionID"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocImageCaption"] = {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocFootnoteLink"] = {guifg = c.green, guibg = "none", gui = "none"}
+    syntax["pandocFootnoteDefLink"] = {guifg = c.green, guibg = "none", gui = "bold"}
+    syntax["pandocFootnoteInline"] = {guifg = c.green, guibg = "none", gui = "bold"}
+    syntax["pandocFootnote"] = {guifg = c.green, guibg = "none", gui = "none"}
+    syntax["pandocCitationDelim"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["pandocCitation"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["pandocCitationID"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["pandocCitationRef"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["pandocStyleDelim"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["pandocEmphasis"] = {guifg = c.base0, guibg = "none", gui = italics()}
+    syntax["pandocEmphasisNested"] = {guifg = c.base0, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasis"] = {guifg = c.base0, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisNested"] = {guifg = c.base0, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisEmphasis"] = {guifg = c.base0, guibg = "none", gui = "bold"}
+    syntax["pandocStrikeout"] = {guifg = c.base01, guibg = "none", gui = "reverse"}
+    syntax["pandocVerbatimInline"] = {guifg = c.yellow, guibg = "none", gui = "none"}
+    syntax["pandocSuperscript"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["pandocSubscript"] = {guifg = c.violet, guibg = "none", gui = "none"}
+    syntax["pandocRule"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocRuleLine"] = {guifg = c.blue, guibg = "none", gui = "bold"}
+    syntax["pandocEscapePair"] = {guifg = c.red, guibg = "none", gui = "bold"}
+    syntax["pandocCitationRef"] = {guifg = c.magenta, guibg = "none", gui = "none"}
+    syntax["pandocNonBreakingSpace"] = {guifg = c.red, guibg = "none", gui = "reverse"}
+    syntax["pandocMetadataDelim"] = {guifg = c.base01, guibg = "none", gui = "none"}
+    syntax["pandocMetadata"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocMetadataKey"] = {guifg = c.blue, guibg = "none", gui = "none"}
+    syntax["pandocMetadata"] = {guifg = c.blue, guibg = "none", gui = "bold"}
 
     syntax["Boolean"] = syntax["Constant"]
     syntax["Character"] = syntax["Constant"]
@@ -416,7 +370,7 @@ function M.load_syntax()
     syntax["TSString"] = syntax["Constant"]
     syntax["TSStringRegex"] = syntax["Constant"]
     syntax["TSStringEscape"] = syntax["Constant"]
-    syntax["TSStrong"] = {guifg = colors.base1, guibg = colors.base03, gui = "bold"}
+    syntax["TSStrong"] = {guifg = c.base1, guibg = c.base03, gui = "bold"}
     syntax["TSConstructor"] = syntax["Function"]
     syntax["TSKeywordFunction"] = syntax["Identifier"]
     syntax["TSLiteral"] = syntax["Normal"]
@@ -430,25 +384,25 @@ function M.load_syntax()
     syntax["TSTypeBuiltin"] = syntax["Type"]
     -- syntax['TSEmphasis'] = syntax['']
 
-    syntax["LspDiagnosticsDefaultError"] = {guifg = colors.red, guibg = "none", guisp = colors.red, gui = "undercurl"}
     syntax["LspDiagnosticsDefaultInformation"] = {
-        guifg = colors.cyan,
+        guifg = "none",
         guibg = "none",
-        guisp = colors.cyan,
-        gui = "undercurl"
-    }
-    syntax["LspDiagnosticsDefaultWarning"] = {
-        guifg = colors.fg,
-        guibg = bg,
-        guisp = colors.yellow,
+        guisp = c.cyan,
         gui = "undercurl"
     }
     syntax["LspDiagnosticsDefaultHint"] = {
-        guifg = colors.green,
+        guifg = "none",
         guibg = "none",
-        guisp = colors.green,
+        guisp = c.green,
         gui = "undercurl"
     }
+    syntax["LspDiagnosticsDefaultWarning"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.yellow,
+        gui = "undercurl"
+    }
+    syntax["LspDiagnosticsDefaultError"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
     syntax["LspDiagnosticsUnderlineError"] = syntax["LspDiagnosticsDefaultError"]
     syntax["LspDiagnosticsUnderlineWarning"] = syntax["LspDiagnosticsDefaultWarning"]
     syntax["LspDiagnosticsUnderlineInformation"] = syntax["LspDiagnosticsDefaultInformation"]
@@ -460,6 +414,21 @@ function M.load_syntax()
     syntax["DiagnosticInformation"] = syntax["LspDiagnosticsDefaultInformation"]
     syntax["DiagnosticHint"] = syntax["LspDiagnosticsDefaultHint"]
     syntax["TargetWord"] = syntax["Title"]
+
+    syntax["HlSearchLensCur"] = syntax["Comment"]
+    syntax["HlSearchLens"] = syntax["Comment"]
+    syntax["HlSearchCur"] = syntax["IncSearch"]
+
+    -- TODO fix these
+    syntax["LspReference"] = {gui = "standout", guifg = "fg", guibg = "bg"}
+    syntax["LspReferenceRead"] = {gui = "standout", guifg = "fg", guibg = "bg"}
+    syntax["LspReferenceText"] = {gui = "standout", guifg = "fg", guibg = "bg"}
+    syntax["LspReferenceWrite"] = {gui = "standout", guifg = "fg", guibg = "bg"}
+
+    -- TODO fix these
+    syntax["TSDefinitionUsage"] = {guifg = "none", guibg = "none", guisp = c.base01, gui = "underline"}
+    syntax["TSDefinition"] = {guifg = "none", guibg = "none", guisp = c.base01, gui = "bold,underline"}
+    syntax["TSCurrentScope"] = {guifg = "none", guibg = "none", guisp = c.base01, gui = "underline"}
 
     for group, colors in pairs(syntax) do
         setup(group, colors)
