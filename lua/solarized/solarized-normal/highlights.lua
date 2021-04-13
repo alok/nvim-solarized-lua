@@ -4,16 +4,11 @@ local g = vim.g
 local o = vim.o
 local fn = vim.fn
 
-cmd('hi clear')
 
 if o.bg == 'dark' then
 	colors = require('solarized.solarized-normal.solarized-dark').setup()
 else
 	colors = require('solarized.solarized-normal.solarized-light').setup()
-end
-
-if fn.exists("syntax_on") then
-	cmd('syntax reset')
 end
 
 local settings = {
@@ -70,17 +65,17 @@ function M.load_syntax()
 
 	if g.solarized_diffmode == 'low' then
 		syntax['DiffAdd'] = {guifg=colors.green, guibg='none', guisp=colors.green, gui='none'}
-		syntax['DiffChange'] = {guifg=colors.yellow, guibg='none', guisp=colors.yellow, gui='none'}
+		syntax['DiffChange'] = {guifg=colors.orange, guibg='none', guisp=colors.orange, gui='none'}
 		syntax['DiffDelete'] = {guifg=colors.red, guibg='none', gui='bold'}
 		syntax['DiffText'] = {guifg=colors.blue, guibg='none', guisp=colors.blue, gui='none'}
 	elseif g.solarized_diffmode == 'high' then
 		syntax['DiffAdd'] = {guifg=colors.green, guibg='none', gui='reverse'}
-		syntax['DiffChange'] = {guifg=colors.yellow, guibg='none', gui='reverse'}
+		syntax['DiffChange'] = {guifg=colors.orange, guibg='none', gui='reverse'}
 		syntax['DiffDelete'] = {guifg=colors.red, guibg='none', gui='reverse'}
 		syntax['DiffText'] = {guifg=colors.blue, guibg='none', gui='reverse'}
 	else
 		syntax['DiffAdd'] = {guifg=colors.green,guibg=colors.base02,guisp=colors.green,gui='none'}
-		syntax['DiffChange'] = {guifg=colors.yellow,guibg=colors.base02,guisp=colors.yellow,gui='none'}
+		syntax['DiffChange'] = {guifg=colors.orange,guibg=colors.base02,guisp=colors.orange,gui='none'}
 		syntax['DiffDelete'] = {guifg=colors.red,guibg=colors.base02,gui='bold'}
 		syntax['DiffText'] = {guifg=colors.blue,guibg=colors.base02,guisp=colors.blue,gui='none'}
 	end
@@ -116,7 +111,7 @@ function M.load_syntax()
 		syntax['SpecialKey'] = {guifg=colors.red,guibg='none',gui='reverse'}
 		syntax['SpellBad'] = {guifg=colors.magenta,guibg=colors.base3,guisp=colors.violet,gui='undercurl'}
 		syntax['SpellCap'] = {guifg=colors.magenta,guibg=colors.base3,guisp=colors.violet,gui='undercurl'}
-		syntax['SpellLocal'] = {guifg=colors.yellow,guibg=colors.base3,guisp=colors.orange,gui='undercurl'}
+		syntax['SpellLocal'] = {guifg=colors.orange,guibg=colors.base3,guisp=colors.orange,gui='undercurl'}
 		syntax['SpellRare'] = {guifg=colors.cyan,guibg=colors.base3,guisp=colors.orange,gui='undercurl'}
 		syntax['Title'] = {guifg=colors.orange,guibg='none',gui='bold'}
 	elseif g.solarized_visibility == 'low' then
@@ -127,7 +122,7 @@ function M.load_syntax()
 		syntax['SpecialKey'] = {guifg=colors.base2,guibg='none',gui='bold'}
 		syntax['SpellBad'] = {guifg=colors.magenta,guibg='none',guisp=colors.violet,gui='undercurl'}
 		syntax['SpellCap'] = {guifg=colors.magenta,guibg='none',guisp=colors.violet,gui='undercurl'}
-		syntax['SpellLocal'] = {guifg=colors.yellow,guibg='none',guisp=colors.yellow,gui='undercurl'}
+		syntax['SpellLocal'] = {guifg=colors.orange,guibg='none',guisp=colors.orange,gui='undercurl'}
 		syntax['SpellRare'] = {guifg=colors.cyan,guibg='none',guisp=colors.cyan,gui='undercurl'}
 		syntax['Title'] = {guifg=colors.base1,guibg='none',gui='bold'}
 	else
@@ -138,7 +133,7 @@ function M.load_syntax()
 		syntax['SpecialKey'] = {guifg=colors.base00,guibg=colors.base02,gui='bold'}
 		syntax['SpellBad'] = {guifg=colors.violet,guibg='none',guisp=colors.violet,gui='undercurl'}
 		syntax['SpellCap'] = {guifg=colors.violet,guibg='none',guisp=colors.violet,gui='undercurl'}
-		syntax['SpellLocal'] = {guifg=colors.yellow,guibg='none',guisp=colors.yellow,gui='undercurl'}
+		syntax['SpellLocal'] = {guifg=colors.orange,guibg='none',guisp=colors.orange,gui='undercurl'}
 		syntax['SpellRare'] = {guifg=colors.cyan,guibg='none',guisp=colors.cyan,gui='undercurl'}
 		syntax['Title'] = {guifg=colors.orange,guibg='none',gui='bold'}
 	end
@@ -147,7 +142,7 @@ function M.load_syntax()
 	syntax['Conceal'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['CursorColumn'] = {guifg='none',guibg=colors.base02,gui='none'}
 	syntax['Directory'] = {guifg=colors.blue,guibg='none',gui='none'}
-	syntax['EndOfBuffer'] = {guifg='none',guibg='none',gui='none',ctermfg='none',ctermbg='none'}
+	syntax['EndOfBuffer'] = {guifg='none',guibg='none',gui='none'}
 	syntax['ErrorMsg'] = {guifg=colors.red,guibg=colors.base3,gui='reverse'}
 	syntax['IncSearch'] = {guifg=colors.orange,guibg='none',gui='standout'}
 	syntax['MatchParen'] = {guifg=colors.base3,guibg=colors.base02,gui='bold'}
@@ -158,7 +153,7 @@ function M.load_syntax()
 	syntax['PmenuSel'] = {guifg=base2,guibg=colors.base00,gui='none'}
 	syntax['PmenuThumb'] = {guifg='none',guibg=colors.base0,gui='none'}
 	syntax['Question'] = {guifg=colors.cyan,guibg='none',gui='bold'}
-	syntax['Search'] = {guifg=colors.yellow,guibg='none',gui='reverse'}
+	syntax['Search'] = {guifg=colors.orange,guibg='none',gui='reverse'}
 	syntax['SignColumn'] = {guifg=colors.base0,guibg='none',gui='none'}
 	syntax['Visual'] = {guifg=colors.base01,guibg=colors.base03,gui='reverse'}
 	syntax['VisualNOS'] = {guifg='none',guibg=colors.base02,gui='reverse'}
@@ -169,12 +164,12 @@ function M.load_syntax()
 	syntax['CursorIM'] = {guifg='none',guibg=fg,gui='none'}
 	syntax['Error'] = {guifg=colors.red,guibg=colors.base3,gui='bold','reverse'}
 	syntax['Identifier'] = {guifg=colors.blue,guibg='none',gui='none'}
-	syntax['Ignore'] = {guifg='none',guibg='none',gui='none',ctermfg='none',ctermbg='none'}
+	syntax['Ignore'] = {guifg='none',guibg='none',gui='none'}
 	syntax['PreProc'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['Special'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['Statement'] = {guifg=colors.green,guibg='none',gui='none'}
 	syntax['Todo'] = {guifg=colors.magenta,guibg='none',gui='bold'}
-	syntax['Type'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['Type'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['Underlined'] = {guifg=colors.violet,guibg='none',gui='none'}
 	syntax['NormalMode'] = {guifg=colors.base0,guibg=colors.base3,gui='reverse'}
 	syntax['InsertMode'] = {guifg=colors.cyan,guibg=colors.base3,gui='reverse'}
@@ -182,7 +177,7 @@ function M.load_syntax()
 	syntax['VisualMode'] = {guifg=colors.magenta,guibg=colors.base3,gui='reverse'}
 	syntax['CommandMode'] = {guifg=colors.magenta,guibg=colors.base3,gui='reverse'}
 	syntax['vimCommentString'] = {guifg=colors.violet,guibg='none',gui='none'}
-	syntax['vimCommand'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['vimCommand'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['vimCmdSep'] = {guifg=colors.blue,guibg='none',gui='bold'}
 	syntax['helpExample'] = {guifg=colors.base1,guibg='none',gui='none'}
 	syntax['helpOption'] = {guifg=colors.cyan,guibg='none',gui='none'}
@@ -191,7 +186,7 @@ function M.load_syntax()
 	syntax['helpHyperTextJump'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['helpHyperTextEntry'] = {guifg=colors.green,guibg='none',gui='none'}
 	syntax['vimIsCommand'] = {guifg=colors.base00,guibg='none',gui='none'}
-	syntax['vimSynMtchOpt'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['vimSynMtchOpt'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['vimSynType'] = {guifg=colors.cyan,guibg='none',gui='none'}
 	syntax['vimHiLink'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['vimHiGroup'] = {guifg=colors.blue,guibg='none',gui='none'}
@@ -206,7 +201,7 @@ function M.load_syntax()
 	syntax['gitcommitUntrackedFile'] = {guifg=colors.cyan,guibg='none',gui='bold'}
 	syntax['gitcommitDiscardedFile'] = {guifg=colors.red,guibg='none',gui='bold'}
 	syntax['gitcommitSelectedFile'] = {guifg=colors.green,guibg='none',gui='bold'}
-	syntax['gitcommitUnmergedFile'] = {guifg=colors.yellow,guibg='none',gui='bold'}
+	syntax['gitcommitUnmergedFile'] = {guifg=colors.orange,guibg='none',gui='bold'}
 	syntax['gitcommitFile'] = {guifg=colors.base0,guibg='none',gui='bold'}
 	syntax['htmlTag'] = {guifg=colors.base01,guibg='none',gui='none'}
 	syntax['htmlEndTag'] = {guifg=colors.base01,guibg='none',gui='none'}
@@ -214,40 +209,40 @@ function M.load_syntax()
 	syntax['htmlTagName'] = {guifg=colors.blue,guibg='none',gui='bold'}
 	syntax['htmlSpecialTagName'] = {guifg=colors.blue,guibg='none',gui=italics()}
 	syntax['htmlArg'] = {guifg=colors.base00,guibg='none',gui='none'}
-	syntax['javaScript'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['javaScript'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['perlHereDoc'] = {guifg=colors.base1,guibg=colors.base03,gui='none'}
-	syntax['perlVarPlain'] = {guifg=colors.yellow,guibg=colors.base03,gui='none'}
+	syntax['perlVarPlain'] = {guifg=colors.orange,guibg=colors.base03,gui='none'}
 	syntax['perlStatementFileDesc'] = {guifg=colors.cyan,guibg=colors.base03,gui='none'}
 	syntax['texstatement'] = {guifg=colors.cyan,guibg=colors.base03,gui='none'}
-	syntax['texmathzonex'] = {guifg=colors.yellow,guibg=colors.base03,gui='none'}
-	syntax['texmathmatcher'] = {guifg=colors.yellow,guibg=colors.base03,gui='none'}
-	syntax['texreflabel'] = {guifg=colors.yellow,guibg=colors.base03,gui='none'}
+	syntax['texmathzonex'] = {guifg=colors.orange,guibg=colors.base03,gui='none'}
+	syntax['texmathmatcher'] = {guifg=colors.orange,guibg=colors.base03,gui='none'}
+	syntax['texreflabel'] = {guifg=colors.orange,guibg=colors.base03,gui='none'}
 	syntax['rubyDefine'] = {guifg=colors.base1,guibg=colors.base03,gui='bold'}
 	syntax['rubyBoolean'] = {guifg=colors.magenta,guibg=colors.base03,gui='none'}
 	syntax['cPreCondit'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['VarId'] = {guifg=colors.blue,guibg='none',gui='none'}
-	syntax['ConId'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['ConId'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['hsImport'] = {guifg=colors.magenta,guibg='none',gui='none'}
 	syntax['hsString'] = {guifg=colors.base00,guibg='none',gui='none'}
 	syntax['hsStructure'] = {guifg=colors.cyan,guibg='none',gui='none'}
 	syntax['hs_hlFunctionName'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['hsStatement'] = {guifg=colors.cyan,guibg='none',gui='none'}
 	syntax['hsImportLabel'] = {guifg=colors.cyan,guibg='none',gui='none'}
-	syntax['hs_OpFunctionName'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['hs_OpFunctionName'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['hs_DeclareFunction'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['hsVarSym'] = {guifg=colors.cyan,guibg='none',gui='none'}
-	syntax['hsType'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['hsType'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['hsTypedef'] = {guifg=colors.cyan,guibg='none',gui='none'}
 	syntax['hsModuleName'] = {guifg=colors.green,guibg='none',gui='none'}
 	syntax['pandocTitleBlock'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['pandocTitleBlockTitle'] = {guifg=colors.blue,guibg='none',gui='bold'}
 	syntax['pandocTitleComment'] = {guifg=colors.blue,guibg='none',gui='bold'}
 	syntax['pandocComment'] = {guifg=colors.base01,guibg='none',gui=italics()}
-	syntax['pandocVerbatimBlock'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['pandocVerbatimBlock'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['pandocBlockQuote'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['pandocBlockQuoteLeader1'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['pandocBlockQuoteLeader2'] = {guifg=colors.cyan,guibg='none',gui='none'}
-	syntax['pandocBlockQuoteLeader3'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['pandocBlockQuoteLeader3'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['pandocBlockQuoteLeader4'] = {guifg=colors.red,guibg='none',gui='none'}
 	syntax['pandocBlockQuoteLeader5'] = {guifg=colors.base0,guibg='none',gui='none'}
 	syntax['pandocBlockQuoteLeader6'] = {guifg=colors.base01,guibg='none',gui='none'}
@@ -313,7 +308,7 @@ function M.load_syntax()
 	syntax['pandocStrongEmphasisNested'] = {guifg=colors.base0,guibg='none',gui='bold'}
 	syntax['pandocStrongEmphasisEmphasis'] = {guifg=colors.base0,guibg='none',gui='bold'}
 	syntax['pandocStrikeout'] = {guifg=colors.base01,guibg='none',gui='reverse'}
-	syntax['pandocVerbatimInline'] = {guifg=colors.yellow,guibg='none',gui='none'}
+	syntax['pandocVerbatimInline'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['pandocSuperscript'] = {guifg=colors.violet,guibg='none',gui='none'}
 	syntax['pandocSubscript'] = {guifg=colors.violet,guibg='none',gui='none'}
 	syntax['pandocRule'] = {guifg=colors.blue,guibg='none',gui='bold'}
@@ -432,7 +427,7 @@ function M.load_syntax()
 
 	syntax['LspDiagnosticsDefaultError'] = {guifg=colors.red,guibg='none',guisp=colors.red,gui='undercurl'}
 	syntax['LspDiagnosticsDefaultInformation'] = {guifg=colors.cyan,guibg='none',guisp=colors.cyan,gui='undercurl'}
-	syntax['LspDiagnosticsDefaultWarning'] = {guifg=colors.yellow,guibg='none',guisp=colors.yellow,gui='undercurl'}
+	syntax['LspDiagnosticsDefaultWarning'] = {guifg=colors.orange,guibg='none',guisp=colors.orange,gui='undercurl'}
 	syntax['LspDiagnosticsDefaultHint'] = {guifg=colors.green,guibg='none',guisp=colors.green,gui='undercurl'}
 	syntax['LspDiagnosticsUnderlineError'] = syntax['LspDiagnosticsDefaultError']
 	syntax['LspDiagnosticsUnderlineWarning'] = syntax['LspDiagnosticsDefaultWarning']
@@ -441,10 +436,10 @@ function M.load_syntax()
 
 	-- Lspsaga
 	syntax['LspSagaFinderSelection'] = syntax['Search']
-	syntax['DiagnosticError'] = syntax['LspDiagnosticsDefaultError'] 
-	syntax['DiagnosticWarning'] = syntax['LspDiagnosticsDefaultWarning'] 
-	syntax['DiagnosticInformation'] = syntax['LspDiagnosticsDefaultInformation'] 
-	syntax['DiagnosticHint'] = syntax['LspDiagnosticsDefaultHint'] 
+	syntax['DiagnosticError'] = syntax['LspDiagnosticsDefaultError']
+	syntax['DiagnosticWarning'] = syntax['LspDiagnosticsDefaultWarning']
+	syntax['DiagnosticInformation'] = syntax['LspDiagnosticsDefaultInformation']
+	syntax['DiagnosticHint'] = syntax['LspDiagnosticsDefaultHint']
 	syntax['TargetWord'] = syntax['Title']
 
 	for group, colors in pairs(syntax) do

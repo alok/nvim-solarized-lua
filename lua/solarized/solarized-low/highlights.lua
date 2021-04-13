@@ -4,16 +4,11 @@ local g = vim.g
 local o = vim.o
 local fn = vim.fn
 
-cmd('hi clear')
 
 if o.bg == 'dark' then
 	colors = require('solarized.solarized-low.solarized-dark').setup()
 else
 	colors = require('solarized.solarized-low.solarized-light').setup()
-end
-
-if fn.exists("syntax_on") then
-	cmd('syntax reset')
 end
 
 local settings = {
@@ -146,9 +141,9 @@ function M.load_syntax()
 	syntax['ColorColumn'] = {guifg=colors.base2,guibg=colors.base1,gui='none'}
 	syntax['Conceal'] = {guifg=colors.blue,guibg='none',gui='none'}
 	syntax['CursorColumn'] = {guifg=colors.base2,guibg=colors.base1,gui='none'}
-	syntax['CursorLine'] = {guifg='none',guibg='none',guisp=colors.base0,gui='underline',ctermfg='none',ctermbg='none'}
+	syntax['CursorLine'] = {guifg='none',guibg='none',guisp=colors.base0,gui='underline'}
 	syntax['Directory'] = {guifg=colors.blue,guibg='none',gui='none'}
-	syntax['EndOfBuffer'] = {guifg='none',guibg='none',gui='none',ctermfg='none',ctermbg='none'}
+	syntax['EndOfBuffer'] = {guifg='none',guibg='none',gui='none'}
 	syntax['ErrorMsg'] = {guifg=colors.red,guibg=colors.base3,gui='reverse'}
 	syntax['IncSearch'] = {guifg=colors.orange,guibg='none',gui='standout'}
 	syntax['ModeMsg'] = {guifg=colors.blue,guibg='none',gui='none'}
@@ -168,7 +163,7 @@ function M.load_syntax()
 	syntax['CursorIM'] = {guifg='none',guibg=fg,gui='none'}
 	syntax['Error'] = {guifg=colors.red,guibg=colors.base3,gui='bold,reverse'}
 	syntax['Identifier'] = {guifg=colors.blue,guibg='none',gui='none'}
-	syntax['Ignore'] = {guifg='none',guibg='none',gui='none',ctermfg='none',ctermbg='none'}
+	syntax['Ignore'] = {guifg='none',guibg='none',gui='none'}
 	syntax['PreProc'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['Special'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['Statement'] = {guifg=colors.green,guibg='none',gui='none'}
@@ -388,7 +383,7 @@ function M.load_syntax()
 
 	syntax['LspDiagnosticsDefaultError'] = {guifg=colors.red,guibg='none',guisp=colors.red,gui='undercurl'}
 	syntax['LspDiagnosticsDefaultInformation'] = {guifg=colors.cyan,guibg='none',guisp=colors.cyan,gui='undercurl'}
-	syntax['LspDiagnosticsDefaultWarning'] = {guifg=colors.yellow,guibg='none',guisp=colors.yellow,gui='undercurl'}
+	syntax['LspDiagnosticsDefaultWarning'] = {guifg=colors.orange,guibg='none',guisp=colors.yellow,gui='undercurl'}
 	syntax['LspDiagnosticsDefaultHint'] = {guifg=colors.green,guibg='none',guisp=colors.green,gui='undercurl'}
 	syntax['LspDiagnosticsUnderlineError'] = syntax['LspDiagnosticsDefaultError']
 	syntax['LspDiagnosticsUnderlineWarning'] = syntax['LspDiagnosticsDefaultWarning']

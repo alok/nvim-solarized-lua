@@ -4,7 +4,6 @@ local g = vim.g
 local o = vim.o
 local fn = vim.fn
 
-cmd('hi clear')
 
 if o.bg == 'dark' then
 	colors = require('solarized.solarized-high.solarized-dark').setup()
@@ -12,9 +11,7 @@ else
 	colors = require('solarized.solarized-high.solarized-light').setup()
 end
 
-if fn.exists("syntax_on") then
-	cmd('syntax reset')
-end
+
 
 local settings = {
 	solarized_visibility = 'normal',
@@ -142,7 +139,7 @@ function M.load_syntax()
 	syntax['CursorColumn'] = {guifg='none',guibg=colors.base02,gui='none'}
 	syntax['CursorLine'] = {guifg='none',guibg=colors.base02,guisp=colors.base1,gui='none'}
 	syntax['Directory'] = {guifg=colors.blue,guibg='none',gui='none'}
-	syntax['EndOfBuffer'] = {guifg='none',guibg='none',gui='none',ctermfg='none',ctermbg='none'}
+	syntax['EndOfBuffer'] = {guifg='none',guibg='none',gui='none'}
 	syntax['ErrorMsg'] = {guifg=colors.red,guibg=colors.base3,gui='reverse'}
 	syntax['IncSearch'] = {guifg=colors.orange,guibg='none',gui='standout'}
 	syntax['MatchParen'] = {guifg=colors.base3,guibg=colors.base02,gui='bold'}
@@ -163,7 +160,7 @@ function M.load_syntax()
 	syntax['Constant'] = {guifg=colors.cyan,guibg='none',gui='none'}
 	syntax['Error'] = {guifg=colors.red,guibg=colors.base3,gui='bold,reverse'}
 	syntax['Identifier'] = {guifg=colors.blue,guibg='none',gui='none'}
-	syntax['Ignore'] = {guifg='none',guibg='none',gui='none',ctermfg='none',ctermbg='none'}
+	syntax['Ignore'] = {guifg='none',guibg='none',gui='none'}
 	syntax['PreProc'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['Special'] = {guifg=colors.orange,guibg='none',gui='none'}
 	syntax['Statement'] = {guifg=colors.green,guibg='none',gui='none'}
