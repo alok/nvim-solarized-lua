@@ -10,9 +10,45 @@ end
 
 local c  -- colors
 if o.bg == "dark" then
-    c = require("solarized.solarized-flat.solarized-dark").setup()
+    c = {
+        base02 = "#073642",
+        red = "#dc322f",
+        green = "#859900",
+        yellow = "#b58900",
+        blue = "#268bd2",
+        magenta = "#d33682",
+        cyan = "#2aa198",
+        base2 = "#eee8d5",
+        base03 = "#002b36",
+        back = "#002b36",
+        orange = "#cb4b16",
+        base01 = "#586e75",
+        base00 = "#657b83",
+        base0 = "#839496",
+        violet = "#6c71c4",
+        base1 = "#93a1a1",
+        base3 = "#fdf6e3"
+    }
 else
-    c = require("solarized.solarized-flat.solarized-light").setup()
+    c = {
+        base2 = "#073642",
+        red = "#dc322f",
+        green = "#859900",
+        yellow = "#b58900",
+        blue = "#268bd2",
+        magenta = "#d33682",
+        cyan = "#2aa198",
+        base02 = "#eee8d5",
+        base3 = "#002b36",
+        orange = "#cb4b16",
+        base1 = "#586e75",
+        base0 = "#657b83",
+        base00 = "#839496",
+        violet = "#6c71c4",
+        base01 = "#93a1a1",
+        base03 = "#fdf6e3",
+        back = "#fdf6e3"
+    }
 end
 
 local settings = {
@@ -62,7 +98,7 @@ function M.load_syntax()
 
     local syntax = {}
     syntax["Normal"] = {guifg = c.base0, guibg = termtrans(c.base03), gui = "none"}
-    syntax["CursorLine"] = {guifg = "none", guibg = termtrans(c.base02), gui = "none"}
+    syntax["CursorLine"] = {guifg = "none", guibg = c.base02, gui = "none"}
     syntax["Terminal"] = {guifg = "fg", guibg = termtrans(c.base03), gui = "none"}
     syntax["ToolbarButton"] = {guifg = c.base1, guibg = termtrans(c.base02), gui = "bold"}
     syntax["ToolbarLine"] = {guifg = "none", guibg = termtrans(c.base02), gui = "none"}
@@ -109,6 +145,7 @@ function M.load_syntax()
     syntax["TabLine"] = {guifg = c.base01, guibg = c.base02, gui = "none"}
     syntax["TabLineFill"] = {guifg = c.base01, guibg = c.base02, gui = "none"}
     syntax["VertSplit"] = {guifg = c.base01, guibg = c.base02, gui = "none"}
+    -- #3c5f96 also a good choice for visual
     syntax["Visual"] = {guifg = "none", guibg = "#494c4d", gui = "none"}
     syntax["VisualNOS"] = {guifg = "none", guibg = c.base02, gui = "reverse"}
     syntax["WarningMsg"] = {guifg = c.orange, guibg = "none", gui = "bold"}
@@ -384,29 +421,15 @@ function M.load_syntax()
     syntax["TSTypeBuiltin"] = syntax["Type"]
     -- syntax['TSEmphasis'] = syntax['']
 
-    syntax["LspDiagnosticsDefaultInformation"] = {
-        guifg = "none",
-        guibg = "none",
-        guisp = c.cyan,
-        gui = "undercurl"
-    }
-    syntax["LspDiagnosticsDefaultHint"] = {
-        guifg = "none",
-        guibg = "none",
-        guisp = c.green,
-        gui = "undercurl"
-    }
-    syntax["LspDiagnosticsDefaultWarning"] = {
-        guifg = "none",
-        guibg = "none",
-        guisp = c.yellow,
-        gui = "undercurl"
-    }
-    syntax["LspDiagnosticsDefaultError"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
-    syntax["LspDiagnosticsUnderlineError"] = syntax["LspDiagnosticsDefaultError"]
-    syntax["LspDiagnosticsUnderlineWarning"] = syntax["LspDiagnosticsDefaultWarning"]
-    syntax["LspDiagnosticsUnderlineInformation"] = syntax["LspDiagnosticsDefaultInformation"]
-    syntax["LspDiagnosticsUnderlineHint"] = syntax["LspDiagnosticsDefaultHint"]
+    syntax["LspDiagnosticsDefaultInformation"] = { guifg = "none", guibg = "none", guisp = c.cyan, gui = "none" }
+    syntax["LspDiagnosticsDefaultHint"] = { guifg = "none", guibg = "none", guisp = c.green, gui = "none" }
+    syntax["LspDiagnosticsDefaultWarning"] = { guifg = "none", guibg = "none", guisp = c.yellow, gui = "none" }
+    syntax["LspDiagnosticsDefaultError"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "none"}
+
+    syntax["LspDiagnosticsUnderlineInformation"] ={ guifg = "none", guibg = "none", guisp = c.cyan, gui = "undercurl" }
+    syntax["LspDiagnosticsUnderlineHint"] = { guifg = "none", guibg = "none", guisp = c.green, gui = "undercurl" }
+    syntax["LspDiagnosticsUnderlineWarning"] ={ guifg = "none", guibg = "none", guisp = c.yellow, gui = "undercurl" }
+    syntax["LspDiagnosticsUnderlineError"] ={guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
 
     syntax["LspSagaFinderSelection"] = syntax["Search"]
     syntax["DiagnosticError"] = syntax["LspDiagnosticsDefaultError"]
