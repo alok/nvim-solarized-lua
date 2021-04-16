@@ -4,13 +4,10 @@ local g = vim.g
 local o = vim.o
 local fn = vim.fn
 
-if fn.exists("syntax_on") then
-    cmd("syntax reset")
-end
+if fn.exists("syntax_on") then cmd("syntax reset") end
 
-local c  -- colors
 if o.bg == "dark" then
-    c = {
+    SOLARIZED_COLORS = {
         base02 = "#073642",
         red = "#dc322f",
         green = "#859900",
@@ -27,10 +24,10 @@ if o.bg == "dark" then
         base0 = "#839496",
         violet = "#6c71c4",
         base1 = "#93a1a1",
-        base3 = "#fdf6e3"
+        base3 = "#fdf6e3",
     }
 else
-    c = {
+    SOLARIZED_COLORS = {
         base2 = "#073642",
         red = "#dc322f",
         green = "#859900",
@@ -47,35 +44,26 @@ else
         violet = "#6c71c4",
         base01 = "#93a1a1",
         base03 = "#fdf6e3",
-        back = "#fdf6e3"
+        back = "#fdf6e3",
     }
 end
+local c = SOLARIZED_COLORS
 
-local settings = {
-    solarized_termtrans = false,
-    solarized_italics = true
-}
+local settings = {solarized_termtrans = false, solarized_italics = true}
 
-for key, val in pairs(settings) do
-    if g[key] == nil then
-        g[key] = val
-    end
-end
+for key, val in pairs(settings) do if g[key] == nil then g[key] = val end end
 
 local setup = function(group, colors)
     if colors.guisp == nil then
-        cmd(string.format("highlight! %s guifg=%s guibg=%s gui=%s", group, colors.guifg, colors.guibg, colors.gui))
+        cmd(
+            string.format(
+                "highlight! %s guifg=%s guibg=%s gui=%s", group, colors.guifg, colors.guibg,
+                    colors.gui))
     else
         cmd(
             string.format(
-                "highlight %s guifg=%s guibg=%s guisp=%s gui=%s",
-                group,
-                colors.guifg,
-                colors.guibg,
-                colors.guisp,
-                colors.gui
-            )
-        )
+                "highlight %s guifg=%s guibg=%s guisp=%s gui=%s", group, colors.guifg, colors.guibg,
+                    colors.guisp, colors.gui))
     end
 end
 
@@ -117,8 +105,8 @@ function M.load_syntax()
     syntax["DiffDelete"] = {guifg = c.red, guibg = "none", gui = "reverse"}
     syntax["DiffText"] = {guifg = c.blue, guibg = "none", gui = "reverse"}
 
-    syntax["StatusLine"] = {guifg = c.base02, guibg = c.base2, gui = "reverse"}
-    syntax["StatusLineNC"] = {guifg = c.base02, guibg = c.base1, gui = "reverse"}
+    syntax["StatusLine"] = {guifg = c.base02, guibg = c.base2, gui = "reverse,standout"}
+    syntax["StatusLineNC"] = {guifg = c.base02, guibg = c.base1, gui = "reverse,standout"}
     syntax["TabLineSel"] = {guifg = c.base2, guibg = c.base02, gui = "none"}
     syntax["NormalMode"] = {guifg = c.base02, guibg = c.base2, gui = "reverse"}
 
@@ -249,8 +237,10 @@ function M.load_syntax()
     syntax["pandocEmphasisDefinition"] = {guifg = c.violet, guibg = "none", gui = italics()}
     syntax["pandocEmphasisNestedDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
     syntax["pandocStrongEmphasisDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisNestedDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
-    syntax["pandocStrongEmphasisEmphasisDefinition"] = {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisNestedDefinition"] =
+        {guifg = c.violet, guibg = "none", gui = "bold"}
+    syntax["pandocStrongEmphasisEmphasisDefinition"] =
+        {guifg = c.violet, guibg = "none", gui = "bold"}
     syntax["pandocStrikeoutDefinition"] = {guifg = c.violet, guibg = "none", gui = "reverse"}
     syntax["pandocVerbatimInlineDefinition"] = {guifg = c.violet, guibg = "none", gui = "none"}
     syntax["pandocSuperscriptDefinition"] = {guifg = c.violet, guibg = "none", gui = "none"}
@@ -284,8 +274,18 @@ function M.load_syntax()
     syntax["pandocLinkText"] = {guifg = c.blue, guibg = "none", gui = "none"}
     syntax["pandocLinkURL"] = {guifg = c.base00, guibg = "none", gui = "none"}
     syntax["pandocLinkTitle"] = {guifg = c.base00, guibg = "none", gui = "none"}
-    syntax["pandocLinkTitleDelim"] = {guifg = c.base01, guibg = "none", guisp = c.base00, gui = "none"}
-    syntax["pandocLinkDefinition"] = {guifg = c.cyan, guibg = "none", guisp = c.base00, gui = "none"}
+    syntax["pandocLinkTitleDelim"] = {
+        guifg = c.base01,
+        guibg = "none",
+        guisp = c.base00,
+        gui = "none",
+    }
+    syntax["pandocLinkDefinition"] = {
+        guifg = c.cyan,
+        guibg = "none",
+        guisp = c.base00,
+        gui = "none",
+    }
     syntax["pandocLinkDefinitionID"] = {guifg = c.blue, guibg = "none", gui = "bold"}
     syntax["pandocImageCaption"] = {guifg = c.violet, guibg = "none", gui = "bold"}
     syntax["pandocFootnoteLink"] = {guifg = c.green, guibg = "none", gui = "none"}
@@ -326,7 +326,7 @@ function M.load_syntax()
     syntax["Float"] = syntax["Constant"]
     syntax["Function"] = syntax["Identifier"]
     syntax["Include"] = syntax["PreProc"]
-    syntax["Keyword"] = syntax["Statement"]
+    syntax["Keyword"] = syntax["Comment"]
     syntax["Label"] = syntax["Statement"]
     syntax["Macro"] = syntax["PreProc"]
     syntax["Number"] = syntax["Constant"]
@@ -421,15 +421,51 @@ function M.load_syntax()
     syntax["TSTypeBuiltin"] = syntax["Type"]
     -- syntax['TSEmphasis'] = syntax['']
 
-    syntax["LspDiagnosticsDefaultInformation"] = { guifg = "none", guibg = "none", guisp = c.cyan, gui = "none" }
-    syntax["LspDiagnosticsDefaultHint"] = { guifg = "none", guibg = "none", guisp = c.green, gui = "none" }
-    syntax["LspDiagnosticsDefaultWarning"] = { guifg = "none", guibg = "none", guisp = c.yellow, gui = "none" }
-    syntax["LspDiagnosticsDefaultError"] = {guifg = "none", guibg = "none", guisp = c.red, gui = "none"}
+    syntax["LspDiagnosticsDefaultInformation"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.cyan,
+        gui = "none",
+    }
+    syntax["LspDiagnosticsDefaultHint"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.green,
+        gui = "none",
+    }
+    syntax["LspDiagnosticsDefaultWarning"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.yellow,
+        gui = "none",
+    }
+    syntax["LspDiagnosticsDefaultError"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.red,
+        gui = "none",
+    }
 
-    syntax["LspDiagnosticsUnderlineInformation"] ={ guifg = "none", guibg = "none", guisp = c.cyan, gui = "undercurl" }
-    syntax["LspDiagnosticsUnderlineHint"] = { guifg = "none", guibg = "none", guisp = c.green, gui = "undercurl" }
-    syntax["LspDiagnosticsUnderlineWarning"] ={ guifg = "none", guibg = "none", guisp = c.yellow, gui = "undercurl" }
-    syntax["LspDiagnosticsUnderlineError"] ={guifg = "none", guibg = "none", guisp = c.red, gui = "undercurl"}
+    syntax["LspDiagnosticsUnderlineInformation"] =
+        {guifg = "none", guibg = "none", guisp = c.cyan, gui = "undercurl"}
+    syntax["LspDiagnosticsUnderlineHint"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.green,
+        gui = "undercurl",
+    }
+    syntax["LspDiagnosticsUnderlineWarning"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.yellow,
+        gui = "undercurl",
+    }
+    syntax["LspDiagnosticsUnderlineError"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.red,
+        gui = "undercurl",
+    }
 
     syntax["LspSagaFinderSelection"] = syntax["Search"]
     syntax["DiagnosticError"] = syntax["LspDiagnosticsDefaultError"]
@@ -449,13 +485,30 @@ function M.load_syntax()
     syntax["LspReferenceWrite"] = {gui = "standout", guifg = "fg", guibg = "bg"}
 
     -- TODO fix these
-    syntax["TSDefinitionUsage"] = {guifg = "none", guibg = "none", guisp = c.base01, gui = "underline"}
-    syntax["TSDefinition"] = {guifg = "none", guibg = "none", guisp = c.base01, gui = "bold,underline"}
+    syntax["TSDefinitionUsage"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.base01,
+        gui = "underline",
+    }
+    syntax["TSDefinition"] = {
+        guifg = "none",
+        guibg = "none",
+        guisp = c.base01,
+        gui = "bold,underline",
+    }
     syntax["TSCurrentScope"] = {guifg = "none", guibg = "none", guisp = c.base01, gui = "underline"}
 
-    for group, colors in pairs(syntax) do
-        setup(group, colors)
-    end
+    syntax["BqfPreviewFloat"] = syntax["Normal"]
+    syntax["BqfPreviewBorder"] = syntax["Normal"]
+    syntax["BqfPreviewCursor"] = syntax["Cursor"]
+    syntax["BqfPreviewRange"] = syntax["Normal"]
+    syntax["BqfSign"] = {guibg = "none", guifg = c.cyan, gui = "none"}
+
+    syntax["ALEVirtualTextError"] = syntax["Normal"]
+    syntax["ALEVirtualTextWarning"] = syntax["Normal"]
+
+    for group, colors in pairs(syntax) do setup(group, colors) end
 end
 
 M.load_syntax()
